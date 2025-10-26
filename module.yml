@@ -1,0 +1,200 @@
+module:
+  code: inventory
+  name: Inventory Management
+  version: 1.0.0
+  description: Complete inventory tracking with warehouses, serial/batch tracking, and stock movements
+  author: LinearBits
+  license: MIT
+  category: Inventory
+  icon: package
+  repository: https://github.com/linearbits/erp-inventory-module
+  
+  # Database tables this module uses
+  database:
+    # Core tables (shared across modules)
+    core_tables:
+      - products
+      - product_categories
+    # Module-specific tables
+    tables:
+      - warehouses
+      - stock_locations
+      - stock_movements
+      - stock_adjustments
+      - serial_numbers
+      - batch_numbers
+  
+  # Permissions required
+  permissions:
+    - inventory.products.view
+    - inventory.products.create
+    - inventory.products.edit
+    - inventory.products.delete
+    - inventory.categories.view
+    - inventory.categories.create
+    - inventory.categories.edit
+    - inventory.categories.delete
+    - inventory.warehouses.view
+    - inventory.warehouses.create
+    - inventory.warehouses.edit
+    - inventory.warehouses.delete
+    - inventory.stock.view
+    - inventory.stock.adjust
+    - inventory.stock.movement
+    - inventory.serial.view
+    - inventory.serial.create
+    - inventory.batch.view
+    - inventory.batch.create
+  
+  # API routes
+  api:
+    prefix: /api/v1/inventory
+    routes:
+      - path: /products
+        methods: [GET, POST, PUT, DELETE]
+        handler: handlers.ProductHandler
+      - path: /products/{id}
+        methods: [GET, PUT, DELETE]
+        handler: handlers.ProductHandler
+      - path: /categories
+        methods: [GET, POST, PUT, DELETE]
+        handler: handlers.CategoryHandler
+      - path: /warehouses
+        methods: [GET, POST, PUT, DELETE]
+        handler: handlers.WarehouseHandler
+      - path: /stock
+        methods: [GET, POST]
+        handler: handlers.StockHandler
+      - path: /stock/adjust
+        methods: [POST]
+        handler: handlers.StockHandler.AdjustStock
+      - path: /stock/movements
+        methods: [GET, POST]
+        handler: handlers.StockMovementHandler
+      - path: /serial-numbers
+        methods: [GET, POST, PUT, DELETE]
+        handler: handlers.SerialNumberHandler
+      - path: /batch-numbers
+        methods: [GET, POST, PUT, DELETE]
+        handler: handlers.BatchNumberHandler
+  
+  # Frontend routes
+  frontend:
+    routes:
+      - path: /inventory
+        component: InventoryDashboard
+        title: Inventory Dashboard
+      - path: /inventory/products
+        component: ProductList
+        title: Products
+      - path: /inventory/products/new
+        component: ProductForm
+        title: New Product
+      - path: /inventory/products/{id}
+        component: ProductDetail
+        title: Product Details
+      - path: /inventory/categories
+        component: CategoryList
+        title: Categories
+      - path: /inventory/warehouses
+        component: WarehouseList
+        title: Warehouses
+      - path: /inventory/stock
+        component: StockLevels
+        title: Stock Levels
+      - path: /inventory/movements
+        component: StockMovements
+        title: Stock Movements
+      - path: /inventory/adjustments
+        component: StockAdjustments
+        title: Stock Adjustments
+      - path: /inventory/serial-numbers
+        component: SerialNumbers
+        title: Serial Numbers
+      - path: /inventory/batch-numbers
+        component: BatchNumbers
+        title: Batch Numbers
+  
+  # Menu items
+  menu:
+    - label: Inventory
+      icon: package
+      path: /inventory
+      children:
+        - label: Dashboard
+          path: /inventory
+        - label: Products
+          path: /inventory/products
+        - label: Categories
+          path: /inventory/categories
+        - label: Warehouses
+          path: /inventory/warehouses
+        - label: Stock Levels
+          path: /inventory/stock
+        - label: Movements
+          path: /inventory/movements
+        - label: Adjustments
+          path: /inventory/adjustments
+        - label: Serial Numbers
+          path: /inventory/serial-numbers
+        - label: Batch Numbers
+          path: /inventory/batch-numbers
+  
+  # Settings
+  settings:
+    - key: enable_serial_tracking
+      type: boolean
+      label: Enable Serial Number Tracking
+      default: false
+    - key: enable_batch_tracking
+      type: boolean
+      label: Enable Batch Number Tracking
+      default: false
+    - key: default_warehouse
+      type: select
+      label: Default Warehouse
+      source: warehouses
+      default: ""
+    - key: low_stock_threshold
+      type: number
+      label: Low Stock Threshold (days)
+      default: 7
+    - key: auto_reorder_enabled
+      type: boolean
+      label: Enable Auto Reorder
+      default: false
+    - key: reorder_point_multiplier
+      type: number
+      label: Reorder Point Multiplier
+      default: 1.5
+      depends_on:
+        auto_reorder_enabled: true
+    - key: require_approval_for_adjustments
+      type: boolean
+      label: Require Approval for Stock Adjustments
+      default: true
+    - key: adjustment_approval_amount
+      type: number
+      label: Require Approval for Adjustments Above
+      default: 100
+      depends_on:
+        require_approval_for_adjustments: true
+    - key: enable_cycle_counting
+      type: boolean
+      label: Enable Cycle Counting
+      default: false
+    - key: cycle_count_frequency
+      type: select
+      label: Cycle Count Frequency
+      options:
+        - value: daily
+          label: Daily
+        - value: weekly
+          label: Weekly
+        - value: monthly
+          label: Monthly
+        - value: quarterly
+          label: Quarterly
+      default: monthly
+      depends_on:
+        enable_cycle_counting: true
