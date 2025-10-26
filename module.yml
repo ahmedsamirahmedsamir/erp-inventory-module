@@ -7,7 +7,7 @@ module:
   license: MIT
   category: Inventory
   icon: package
-  repository: https://github.com/linearbits/erp-inventory-module
+  repository: https://github.com/ahmedsamirahmedsamir/erp-inventory-module
   
   # Database tables this module uses
   database:
