@@ -1,9 +1,7 @@
 import React, { useState } from 'react'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { Plus, Search, Filter, Package, Edit, Trash2, Eye } from 'lucide-react'
-import { DataTable } from '../../components/table/DataTable'
-import { ProductForm } from '../../components/forms/ProductForm'
-import { api } from '../../lib/api'
+import { DataTable, api } from '@erp-modules/shared'
 
 interface Product {
   id: string
